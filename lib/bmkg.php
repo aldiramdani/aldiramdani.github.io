@@ -572,20 +572,26 @@ class BMKG
 				{
 					if ($i != 0) 
 					{
+						$statusTsunami = 0;
 						$datetime	        = $tr->find('td', 1)->innertext;
-						$coords              = $tr->find('td', 2)->innertext;
-						$latitude_longitude  = explode(" - ", $coords);
-						$magnitude           = $tr->find('td', 3)->innertext;
-						$depth               = $tr->find('td', 4)->innertext;
-						$region              = $tr->find('td', 5)->innertext;
+						$lan              = $tr->find('td', 2)->innertext;
+						$lon 				= $tr->find('td',3)->innertext;
+						$magnitude           = $tr->find('td', 4)->innertext;
+						$depth               = $tr->find('td', 5)->innertext;
+						if($depth < 15 && $magnitude>=6.5){
+						    $statusTsunami = 1;
+						}else{
+						    $statusTsunami = 0;
+						}
+						$city              = $tr->find('td', 6)->innertext;
 						$cells = array(
 							'time' => strip_tags($datetime),
-							'coordinate'=>array(
-								'lat' => strip_tags($latitude_longitude[0])*1,
-								'lon' => strip_tags($latitude_longitude[1])*1),
-							'magnitude' => strip_tags($magnitude)*1,
+							'lat' => strip_tags($lan),
+							'lon' => strip_tags($lon),
+							'mag' => strip_tags($magnitude)*1,
 							'depth' => strip_tags($depth),
-							'zone' => strip_tags($region)
+							'place' => strip_tags($city),
+						    'tsunami' => strip_tags($statusTsunami)*1 
 						);
 						$result['data'][] = $cells;
 					}
